@@ -35,6 +35,16 @@ USER_GROUP_LIST = [1, 2, 3]
 
 CUSTOMER_STATUS_DICT = {'1': 'Active', '2': 'Disable'}
 
+OPPORTUNITY_SOURCE_DICT = {
+        '1': u'现有客户',
+        '2': u'参考',
+        '3': u'供应商推荐',
+        '4': u'邮件群发',
+        '5': '客户的供应商',
+        '6': u'活动',
+        '7': u'主动上门',
+        '8': u'广告'}
+
 IMPORT_USER_FILE_TYPE_LIST = ['text/csv']
 
 

@@ -123,5 +123,4 @@ class OpportrunityAddForm(FlaskForm):
     source = StringField('source')
     name = StringField('name')
     next_contacts = StringField('next_contacts')
-    next_date = DateField('Start Date', format='%m/%d/%Y', validators=(validators.Optional(),))
     submit = SubmitField('添加')

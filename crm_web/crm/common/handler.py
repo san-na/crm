@@ -356,22 +356,15 @@ class OpportunityCtl(object):
     def get_all():
         """获取所有销售机会
         """
-        opportunity = Opportunity.query.all()
-        return opportunity
+        result = Opportunity.query.all()
+        return result
 
     @staticmethod
-    def add(uid, name, description=''):
+    def add(name, source, next_contacts):
         """新增销售机会
         """
-        opportunity = Opportunity.query.filter(Opportunity.name == name).first()
-        if opportunity:
-            opportunity.name = name
-            opportunity.description = description
-            opportunity.modified_by = uid
-            opportunity.update()
-        else:
-            opportunity = Opportunity(name, description, uid, uid)
-            opportunity.save()
+        opportunity = Opportunity(name, next_contacts, source)
+        opportunity.save()
         return opportunity
 
     @staticmethod

@@ -38,15 +38,18 @@
         </tr>
       </thead>
       <tbody>
-        {% for product in products %}
+        {% for i in result %}
         <tr>
-          <td>{{ product.name }}</td>
-          <td class="center">{{ product.description }}</td>
-          <td class="center">{{ owner_dict[product.owner] }}</td>
-          <td class="center">{{ product.created }}</td>
-          <td class="center">{{ product.updated }}</td>
+          <td>{{ i.id }}</td>
+          <td class="center">{{ i.source }}</td>
+          <td class="center">{{ i.name }}</td>
+          <td class="center">{{ i.status }}</td>
+          <td class="center">{{ i.next_contacts }}</td>
+          <td class="center">{{ i.next_date }}</td>
+          <td class="center">{{ i.created }}</td>
+          <td class="center">{{ i.updated }}</td>
           <td class="center">
-            <a class="btn btn-danger" href="{{url_for('Common.product', action='delete', uid=product.id)}}">
+            <a class="btn btn-danger" href="{{url_for('Common.product', action='delete', uid=i.id)}}">
               <i class="icon-trash icon-white"></i>
               删除
             </a>

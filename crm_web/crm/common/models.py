@@ -183,15 +183,15 @@ class Opportunity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     source = db.Column(db.String(200), default="")
-    netxt_contacts = db.Column(db.String(100))
+    next_contacts = db.Column(db.String(100))
     next_date = db.Column(db.DateTime, default=datetime.now())
     created = db.Column(db.DateTime, default=datetime.now())
     updated = db.Column(db.DateTime, default=datetime.now())
 
-    def __init__(self, name, source, netxt_contacts):
+    def __init__(self, name, source, next_contacts):
         self.name = name
         self.source = source
-        self.netxt_contacts = netxt_contacts
+        self.next_contacts = next_contacts
         self.created = datetime.now()
         self.updated = datetime.now()
 

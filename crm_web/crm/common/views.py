@@ -10,7 +10,7 @@ from time import time
 
 from crm.common import Common
 from crm import settings, login_manager
-from handler import CustomerCtl, AdminCtl, GroupCtl, ProductCtl
+from handler import CustomerCtl, AdminCtl, GroupCtl, ProductCtl, OpportunityCtl
 from forms import LoginForm, RegistrationForm, AdminProfileForm, ResetPasswordForm, AddCustomerForm,\
             DataImportForm, EditCustomerForm, AdminAddForm, CustomerFllowForm, GroupAddForm, GroupEditForm,\
             ProductAddForm, OpportrunityAddForm
@@ -208,14 +208,18 @@ def opportunity(action):
     if action =='add':
         form = OpportrunityAddForm()
         if form.validate_on_submit():
+            next_contacts = form.data['next_contacts']
             name = form.data['name']
-            description = form.data['description']
-            if GroupCtl.add(current_user.id, name, description):
+            source = form.data['source']
+            if OpportunityCtl.add(name, next_contacts, source):
                 flash(u'操作成功', 'success')
             else:
                 flash(u'操作失败', 'error')
+
         kwargs = {
-            'form': form
+            'form': form,
+            'sources': settings.OPPORTUNITY_SOURCE_DICT,
+            'owner_dict': AdminCtl.get_all()
         }
         return render_template('opportunity_add.html', **kwargs)
     if action == 'edit':
@@ -239,20 +243,20 @@ def opportunity(action):
             flash(u'操作失败', 'error')
         return redirect(url_for('Common.group', action='list'))
     if action == 'list':
-        groups = GroupCtl.get_all()
+        result = OpportunityCtl.get_all()
         owner_dict = {}
-        for i in groups:
+        for i in result:
             try:
                 owner_dict[i.owner] = AdminCtl.get(i.owner).name
             except:
                 # 如果用户被删除，则AdminCtl.get可能引发异常
                 pass
         kwargs = {
-            'groups': groups,
+            'result': result,
             'owner_dict': owner_dict
         }
 
-        return render_template('opportunity.html')
+        return render_template('opportunity.html', **kwargs)
     return render_template("404.html")
 
 @Common.route('/system_settings', methods=['GET', 'POST'])
