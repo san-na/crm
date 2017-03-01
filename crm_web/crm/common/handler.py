@@ -5,7 +5,7 @@ import random
 from IPython import embed
 from datetime import datetime
 
-from models import Customer, Admin, Group, Product
+from models import Customer, Admin, Group, Product, Opportunity
 from crm import db
 from crm import settings
 
@@ -343,5 +343,50 @@ class ProductCtl(object):
         product = Product.query.filter(Product.id == group_id).first()
         if product:
             product.delete()
+            return True
+        return False
+
+
+class OpportunityCtl(object):
+    """销售机会控制器
+
+    """
+
+    @staticmethod
+    def get_all():
+        """获取所有销售机会
+        """
+        opportunity = Opportunity.query.all()
+        return opportunity
+
+    @staticmethod
+    def add(uid, name, description=''):
+        """新增销售机会
+        """
+        opportunity = Opportunity.query.filter(Opportunity.name == name).first()
+        if opportunity:
+            opportunity.name = name
+            opportunity.description = description
+            opportunity.modified_by = uid
+            opportunity.update()
+        else:
+            opportunity = Opportunity(name, description, uid, uid)
+            opportunity.save()
+        return opportunity
+
+    @staticmethod
+    def get(group_id):
+        """获取销售机会
+        """
+        opportunity = Opportunity.query.filter(Opportunity.id == group_id).first()
+        return opportunity
+
+    @staticmethod
+    def delete(group_id):
+        """删除销售机会
+        """
+        opportunity = Opportunity.query.filter(Opportunity.id == group_id).first()
+        if opportunity:
+            opportunity.delete()
             return True
         return False

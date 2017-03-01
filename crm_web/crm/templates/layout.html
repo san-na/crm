@@ -35,6 +35,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/opa-icons.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/uploadify.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sweetalert2.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sweetalert2.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css') }}">
+
 
     <!-- The fav icon -->
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
@@ -94,7 +97,7 @@
                 <li><a class="ajax-link" href="{{url_for('Common.user_setting')}}"><i class="icon-user"></i><span class="hidden-tablet"> 用户管理</span></a></li>
                 <li><a class="ajax-link" href="{{url_for('Common.permission_setting')}}"><i class="icon-lock"></i><span class="hidden-tablet"> 权限管理</span></a></li>
                 <li class="nav-header hidden-tablet">其他管理</li>
-                <li><a class="ajax-link" href="{{url_for('Common.sales_opportunity_management')}}"><i class="icon-book"></i><span class="hidden-tablet"> 销售机会信息管理</span></a></li>
+                <li><a class="ajax-link" href="{{url_for('Common.opportunity', action='list')}}"><i class="icon-book"></i><span class="hidden-tablet"> 销售机会信息管理</span></a></li>
                 <li><a href="{{url_for('Common.product', action='list')}}"><i class="icon-cog"></i><span class="hidden-tablet"> 产品管理</span></a></li>
               </ul>
             </div><!--/.well -->
@@ -159,7 +162,6 @@
       <script src="{{ url_for('static', filename='js/charisma.js') }}"></script>
       <!-- sweetAlert2 JavaScript -->
       <script src="{{ url_for('static', filename='js/sweetalert2.js') }}"></script>
-
       <!-- Some  Custom JavaScript -->
       <script type="text/javascript" src="{{ url_for('static', filename='js/opt.js') }}"></script>
 

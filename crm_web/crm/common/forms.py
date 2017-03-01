@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm, RecaptchaField
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import StringField, PasswordField, validators, SubmitField,\
     BooleanField, HiddenField, TextAreaField, RadioField, SelectMultipleField,\
-     SelectField
+     SelectField, DateField
 from wtforms.fields.html5 import EmailField
 
 from crm import settings
@@ -116,4 +116,12 @@ class GroupEditForm(FlaskForm):
 class ProductAddForm(FlaskForm):
     name = StringField('产品名')
     description = TextAreaField('描述')
+    submit = SubmitField('添加')
+
+
+class OpportrunityAddForm(FlaskForm):
+    source = StringField('source')
+    name = StringField('name')
+    next_contacts = StringField('next_contacts')
+    next_date = DateField('Start Date', format='%m/%d/%Y', validators=(validators.Optional(),))
     submit = SubmitField('添加')

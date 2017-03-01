@@ -142,7 +142,7 @@ class Group(db.Model):
 
 
 class Product(db.Model):
-    '''存放用户组相关信息
+    '''存放产品相关信息
     '''
     __tablename__ = 'product'
 
@@ -174,6 +174,38 @@ class Product(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+
+class Opportunity(db.Model):
+    '''存放销售机会相关信息
+    '''
+    __tablename__ = 'opportunity'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    source = db.Column(db.String(200), default="")
+    netxt_contacts = db.Column(db.String(100))
+    next_date = db.Column(db.DateTime, default=datetime.now())
+    created = db.Column(db.DateTime, default=datetime.now())
+    updated = db.Column(db.DateTime, default=datetime.now())
+
+    def __init__(self, name, source, netxt_contacts):
+        self.name = name
+        self.source = source
+        self.netxt_contacts = netxt_contacts
+        self.created = datetime.now()
+        self.updated = datetime.now()
+
+    def update(self):
+        self.updated = datetime.now()
+        db.session.commit()
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 db.create_all()
 db.session.commit()

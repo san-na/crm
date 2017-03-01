@@ -13,7 +13,7 @@ from crm import settings, login_manager
 from handler import CustomerCtl, AdminCtl, GroupCtl, ProductCtl
 from forms import LoginForm, RegistrationForm, AdminProfileForm, ResetPasswordForm, AddCustomerForm,\
             DataImportForm, EditCustomerForm, AdminAddForm, CustomerFllowForm, GroupAddForm, GroupEditForm,\
-            ProductAddForm
+            ProductAddForm, OpportrunityAddForm
 import utils
 
 @login_manager.user_loader
@@ -198,14 +198,62 @@ def order_management():
     return render_template('order_management.html')
 
 
-@Common.route('/sales_opportunity_management', methods=['GET', 'POST'])
+@Common.route('/opportunity/<action>', methods=['GET', 'POST'])
 @login_required
-def sales_opportunity_management():
+def opportunity(action):
     """
     销售机会管理
     """
 
-    return render_template('sales_opportunity_management.html')
+    if action =='add':
+        form = OpportrunityAddForm()
+        if form.validate_on_submit():
+            name = form.data['name']
+            description = form.data['description']
+            if GroupCtl.add(current_user.id, name, description):
+                flash(u'操作成功', 'success')
+            else:
+                flash(u'操作失败', 'error')
+        kwargs = {
+            'form': form
+        }
+        return render_template('opportunity_add.html', **kwargs)
+    if action == 'edit':
+        group_id = request.args.get('group_id', '')
+        group = GroupCtl.get(group_id)
+        form = GroupEditForm()
+        if group:
+            form.group_id.data = group.id
+            form.name.data = group.name
+            form.description.data = group.description
+        kwargs = {
+            'form': form
+        }
+        return render_template('customer_group_add.html', **kwargs)
+    if action == 'delete':
+        group_id = request.args.get('group_id', '')
+        group = GroupCtl.delete(group_id)
+        if group:
+            flash(u'操作成功', 'success')
+        else:
+            flash(u'操作失败', 'error')
+        return redirect(url_for('Common.group', action='list'))
+    if action == 'list':
+        groups = GroupCtl.get_all()
+        owner_dict = {}
+        for i in groups:
+            try:
+                owner_dict[i.owner] = AdminCtl.get(i.owner).name
+            except:
+                # 如果用户被删除，则AdminCtl.get可能引发异常
+                pass
+        kwargs = {
+            'groups': groups,
+            'owner_dict': owner_dict
+        }
+
+        return render_template('opportunity.html')
+    return render_template("404.html")
 
 @Common.route('/system_settings', methods=['GET', 'POST'])
 @login_required
@@ -313,79 +361,6 @@ def admin_profile():
     }
 
     return render_template("user_profile.html", **kwargs)
-
-#
-# @Common.route('/send_mail', methods=['GET', 'POST'])
-# def send_mail():
-#     email = request.args.get('email', '')
-#     token = utils.encode_jwt_token(email)
-#     url = settings.HTTP_URL.format('reset_password', token)
-#
-#     msg_content = render_template('email.html', email=email, test_url=url)
-#     phone_email = utils.phoneSendEmail(u'找回密码')
-#     phone_email.send(msg_content, email)
-#     result = {}
-#     result['email'] = email
-#     result['msg'] = msg_content
-#
-#     return jsonify(data=result)
-#
-#
-# @Common.route('/send_email2reguser', methods=['GET', 'POST'])
-# @login_required
-# def send_email2reguser():
-#     """发送用户激活邮件
-#         再次通过name和current_user.id查询数据库获取用户,
-#         避免发送email给不是自己该管理员下的用户
-#     """
-#
-#     username = request.args.get('username', '')
-#     user = CustomerCtl.get_by_name(username, current_user.id)
-#     if not user:
-#         flash(u'找不到该用户', 'error')
-#         return redirect(request.url)
-#     if not user.email:
-#         flash(u'该用户没添加Email', 'error')
-#         return redirect(request.url)
-#
-#     token = utils.encode_reg_user_token(user.id, user.email)
-#     url = settings.HTTP_URL.format('add_device', token)
-#
-#     msg_content = render_template('email2reguser.html', test_url=url)
-#     phone_email = utils.phoneSendEmail(u'账号激活')
-#     phone_email.send(msg_content, user.email)
-#     result = {}
-#     result['email'] = user.email
-#     result['msg'] = msg_content
-#
-#     return jsonify(data=result)
-#
-#
-# @Common.route('/reset_password', methods=['GET', 'POST'])
-# def reset_password():
-#     """重置密码
-#     """
-#
-#     form = ResetPasswordForm()
-#     token = request.args.get('token', '')
-#     if request.method == 'POST':
-#         token = form.data['token']
-#         password = form.data['password']
-#         reg_confirm = form.data['reg_confirm']
-#
-#         item = utils.decode_jwt_token(token)
-#         email = item['email']
-#         timestamp = item['timestamp']
-#
-#         if time() - timestamp > settings.PASSWORD_TIME_OUT:
-#             flash(u'连接已超时，请重新获取获取', 'warning')
-#
-#         else:
-#             user = AdminCtl.reset_password(email, password)
-#             if user:
-#                 flash(u'密码重置成功！', 'success')
-#     form.token.data = token
-#     return render_template('reset_password.html', form=form)
 
 
 @Common.route('/user_disable', methods=['GET', 'POST'])
@@ -576,3 +551,77 @@ def customer(action):
 
         return render_template("customer.html", **kwargs)
     return render_template("404.html")
+
+
+#
+# @Common.route('/send_mail', methods=['GET', 'POST'])
+# def send_mail():
+#     email = request.args.get('email', '')
+#     token = utils.encode_jwt_token(email)
+#     url = settings.HTTP_URL.format('reset_password', token)
+#
+#     msg_content = render_template('email.html', email=email, test_url=url)
+#     phone_email = utils.phoneSendEmail(u'找回密码')
+#     phone_email.send(msg_content, email)
+#     result = {}
+#     result['email'] = email
+#     result['msg'] = msg_content
+#
+#     return jsonify(data=result)
+#
+#
+# @Common.route('/send_email2reguser', methods=['GET', 'POST'])
+# @login_required
+# def send_email2reguser():
+#     """发送用户激活邮件
+#         再次通过name和current_user.id查询数据库获取用户,
+#         避免发送email给不是自己该管理员下的用户
+#     """
+#
+#     username = request.args.get('username', '')
+#     user = CustomerCtl.get_by_name(username, current_user.id)
+#     if not user:
+#         flash(u'找不到该用户', 'error')
+#         return redirect(request.url)
+#     if not user.email:
+#         flash(u'该用户没添加Email', 'error')
+#         return redirect(request.url)
+#
+#     token = utils.encode_reg_user_token(user.id, user.email)
+#     url = settings.HTTP_URL.format('add_device', token)
+#
+#     msg_content = render_template('email2reguser.html', test_url=url)
+#     phone_email = utils.phoneSendEmail(u'账号激活')
+#     phone_email.send(msg_content, user.email)
+#     result = {}
+#     result['email'] = user.email
+#     result['msg'] = msg_content
+#
+#     return jsonify(data=result)
+#
+#
+# @Common.route('/reset_password', methods=['GET', 'POST'])
+# def reset_password():
+#     """重置密码
+#     """
+#
+#     form = ResetPasswordForm()
+#     token = request.args.get('token', '')
+#     if request.method == 'POST':
+#         token = form.data['token']
+#         password = form.data['password']
+#         reg_confirm = form.data['reg_confirm']
+#
+#         item = utils.decode_jwt_token(token)
+#         email = item['email']
+#         timestamp = item['timestamp']
+#
+#         if time() - timestamp > settings.PASSWORD_TIME_OUT:
+#             flash(u'连接已超时，请重新获取获取', 'warning')
+#
+#         else:
+#             user = AdminCtl.reset_password(email, password)
+#             if user:
+#                 flash(u'密码重置成功！', 'success')
+#     form.token.data = token
+#     return render_template('reset_password.html', form=form)
