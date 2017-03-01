@@ -1,0 +1,38 @@
+{% extends "layout.html" %} {% block content %}
+<h3>添加产品</h3>
+<div>
+  <ul class="breadcrumb">
+    <li>
+      <a href="{{url_for('Common.index')}}">Home</a> <span class="divider">/</span>
+    </li>
+    <li>
+      <a href="{{url_for('Common.product', action='list')}}">产品管理</a><span class="divider">/</span>
+    </li>
+    <li>
+      <a href="#">添加产品</a>
+    </li>
+  </ul>
+</div>
+
+<div class="box-content">
+  <form class="form-horizontal" role="form" action="{{url_for('Common.product', action="add")}}" method="post">
+    {{ form.csrf_token }}
+    <fieldset>
+      <div class="control-group">
+        <label class="control-label">产品名</label>
+        <div class="controls">
+          {{ form.name(class="form-control", placeholder="请输入产品名", autocomplete=true)}}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">描述</label>
+        <div class="controls">
+          {{ form.description(class="form-control", placeholder="描述") }}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">添加</button>
+    </fieldset>
+  </form>
+
+</div>
+{% endblock %}

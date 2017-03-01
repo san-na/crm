@@ -1,0 +1,86 @@
+{% extends "layout.html" %} {% block content %}
+<h3>客户信息管理</h3>
+<div>
+  <ul class="breadcrumb">
+    <li>
+      <a href="{{url_for('Common.index')}}">Home</a> <span class="divider">/</span>
+    </li>
+    <li>
+      <a href="#">客户信息管理</a>
+    </li>
+  </ul>
+</div>
+<a href="{{url_for('Common.customer', action='add')}}"><button class="btn btn-large btn-round btn-success"><i class="icon-plus icon-white"></i> 添加客户</button></a>
+
+
+<div class="box">
+  <div class="box-header well" data-original-title="">
+    <h2>客户列表</h2>
+    <div class="box-icon">
+      <a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
+      <a href="#" class="btn btn-close btn-round"><i class="icon-remove"></i></a>
+    </div>
+  </div>
+  <div class="box-content">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>客户名</th>
+          <th>电话</th>
+          <th>类别</th>
+          <th>公司</th>
+          <th>状态</th>
+          <th>组</th>
+          <th>负责人</th>
+          <th>创建日期</th>
+          <th>修改日期</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in result %}
+        <tr>
+          <td>{{ i.name }}</td>
+          <td class="center">{{ i.phone }}</td>
+          <td class="center">
+            {% if not i.type %}
+            <span class="label">默认</span>
+            {% else %}
+            {{ i.type }}
+            {% endif %}
+          </td>
+          <td class="center">{{ i.company }}</td>
+          <td class="center">
+            <span class="label label-success">{{ STATUS_LIST[i.status] }}</span>
+          </td>
+          <td class="center">
+            {% if not i.type %}
+            <span class="label label-important">未分配</span>
+            {% else %}
+            {{ i.group }}
+            {% endif %}
+          </td>
+          <td class="center">{{ owner_dict[i.owner] }}</td>
+          <td class="center">{{ i.created }}</td>
+          <td class="center">{{ i.updated }}</td>
+          <td class="center">
+            <a class="btn btn-info" href="{{url_for('Common.customer', action='edit', uid=i.id)}}">
+              <i class="icon-edit icon-white"></i>
+              编辑
+            </a>
+            <a class="btn btn-danger" href="{{url_for('Common.customer_delete', uid=i.id)}}">
+              <i class="icon-trash icon-white"></i>
+              删除
+            </a>
+            <a class="btn btn-success" href="{{url_for('Common.customer_follow_up', customer_id=i.id)}}">
+              <i class="icon-plus icon-white"></i>
+              跟进
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

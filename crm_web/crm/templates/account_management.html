@@ -1,0 +1,44 @@
+{% extends "layout.html" %} {% block content %}
+<div class="row">
+  <div class="col-xs-6">
+  <h3>账号管理页面</h3>
+  </div>
+  <br>
+  <div class="col-xs-6 text-right">
+<a type="button" class="btn btn-primary pull-right fa fa-plus" href="{{url_for('Common.users', action='add')}}"> 添加账号</a>
+  </div>
+</div>
+
+<br>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                账号列表
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>用户名</th>
+                                <th>邮箱</th>
+                                <th>上次登录</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td><a href="{{url_for('Common.users_prifile', username=user.name)}}">{{user.name}}</a></td>
+                                <td>{{user.email}}</td>
+                                <td>{{user.last_login}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block scripts %} {% endblock %}

@@ -1,0 +1,42 @@
+{% extends "layout.html" %} {% block content %}
+<h3>系统概况</h3>
+<div>
+  <ul class="breadcrumb">
+    <li>
+      <a href="{{url_for('Common.index')}}">Home</a> <span class="divider">/</span>
+    </li>
+    <li>
+      <a href="#">仪表盘</a>
+    </li>
+  </ul>
+</div>
+<div class="sortable row-fluid">
+  <a data-rel="tooltip" title="点击跳转到 客户列表" class="well span3 top-block" href="{{url_for('Common.customer', action='list')}}">
+    <span class="icon32 icon-red icon-user"></span>
+    <div>客户数</div>
+    <div>{{ total_customer }}</div>
+    <!-- <span class="notification">6</span> -->
+  </a>
+
+  <a data-rel="tooltip" title="点击跳转到 用户列表" class="well span3 top-block" href="{{url_for('Common.group', action='list')}}">
+    <span class="icon32 icon-color icon-star-on"></span>
+    <div>用户组</div>
+    <div>{{ total_group }}</div>
+    <!-- <span class="notification green">4</span> -->
+  </a>
+
+  <a data-rel="tooltip" title="点击跳转到 管理员列表" class="well span3 top-block" href="{{url_for('Common.user_setting')}}">
+    <span class="icon32 icon-color icon-cart"></span>
+    <div>管理员数</div>
+    <div>{{ total_admin }}</div>
+    <!-- <span class="notification yellow">$34</span> -->
+  </a>
+
+  <a data-rel="tooltip" title="点击跳转到 产品列表" class="well span3 top-block" href="{{url_for('Common.product', action='list')}}">
+    <span class="icon32 icon-color icon-envelope-closed"></span>
+    <div>产品数</div>
+    <div>{{ total_product }}</div>
+    <!-- <span class="notification red">12</span> -->
+  </a>
+</div>
+{% endblock %}

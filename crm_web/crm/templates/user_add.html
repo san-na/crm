@@ -1,0 +1,45 @@
+{% extends "layout.html" %} {% block content %}
+<h3>用户管理</h3>
+<div>
+  <ul class="breadcrumb">
+    <li>
+      <a href="{{url_for('Common.index')}}">Home</a> <span class="divider">/</span>
+    </li>
+    <li>
+      <a href="{{url_for('Common.user_setting')}}">用户管理</a><span class="divider">/</span>
+    </li>
+    <li>
+      <a href="#">添加用户</a>
+    </li>
+  </ul>
+</div>
+
+<div class="box-content">
+  <form class="form-horizontal" role="form" action="{{url_for('Common.user_setting', action="add")}}" method="post">
+    {{ form.csrf_token }}
+    <fieldset>
+      <div class="control-group">
+        <label class="control-label">姓名</label>
+        <div class="controls">
+          {{ form.name(class="form-control", placeholder="请输入用户名", autocomplete=true)}}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="focusedInput">邮箱</label>
+        <div class="controls">
+          {{ form.email(class="form-control", placeholder="Email") }}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="focusedInput">密码</label>
+        <div class="controls">
+          {{ form.password(class="form-control", placeholder="password") }}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">添加</button>
+
+    </fieldset>
+  </form>
+
+</div>
+{% endblock %}

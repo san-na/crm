@@ -1,0 +1,75 @@
+{% extends "layout.html" %} {% block content %}
+<h3>客户信息管理</h3>
+<div>
+  <ul class="breadcrumb">
+    <li>
+      <a href="{{url_for('Common.index')}}">Home</a> <span class="divider">/</span>
+    </li>
+    <li>
+      <a href="{{url_for('Common.customer', action='list')}}">客户信息管理</a><span class="divider">/</span>
+    </li>
+    <li>
+      <a href="#">编辑客户</a>
+    </li>
+  </ul>
+</div>
+
+<div class="box-content">
+  <form class="form-horizontal" role="form" action="{{url_for('Common.customer', action="edit")}}" method="post">
+    {{ form.csrf_token }}{{ form.uid }}
+    <fieldset>
+      <div class="control-group">
+        <label class="control-label">姓名</label>
+        <div class="controls">
+          {{ form.name(class="form-control", placeholder="请输入用户名", autocomplete=true)}}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">性别</label>
+        <div class="controls">
+          {{ form.sex(class="form-control", placeholder="性别") }}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="focusedInput">电话</label>
+        <div class="controls">
+          {{ form.phone(class="form-control", placeholder="请输入电话号码") }}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="focusedInput">邮箱</label>
+        <div class="controls">
+          {{ form.email(class="form-control", placeholder="Email") }}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">税号</label>
+        <div class="controls">
+          {{ form.tax_id(class="form-control", placeholder="税号") }}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">公司</label>
+        <div class="controls">
+          {{ form.company(class="form-control", placeholder="公司") }}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">地址</label>
+        <div class="controls">
+          {{ form.addr(class="form-control", placeholder="联系地址") }}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">备注</label>
+        <div class="controls">
+          {{ form.note(class="form-control", placeholder="备注") }}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">提交</button>
+
+    </fieldset>
+  </form>
+
+</div>
+{% endblock %}

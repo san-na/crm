@@ -1,0 +1,39 @@
+{% extends "layout.html" %} {% block content %}
+<h3>客户跟进</h3>
+<div>
+  <ul class="breadcrumb">
+    <li>
+      <a href="{{url_for('Common.index')}}">Home</a> <span class="divider">/</span>
+    </li>
+    <li>
+      <a href="#">客户跟进</a>
+    </li>
+  </ul>
+</div>
+
+<div class="box-content">
+  <form class="form-horizontal" role="form" action="{{url_for('Common.customer_follow_up')}}" method="post">
+    {{ form.csrf_token }}
+    {{ form.customer_id }}
+    <fieldset>
+      <div class="control-group">
+        <label class="control-label">姓名</label>
+        <div class="controls">
+          <div class="col-sm-5">
+            <select id="owner" name="owner" class="form-control">
+            {% for owner in owners %}
+              <option value={{owner.id}}>{{owner.name}}</option>
+            {% endfor %}
+          </select>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">添加</button>
+
+    </fieldset>
+  </form>
+
+</div>
+{{customer_id}}
+
+{% endblock %}

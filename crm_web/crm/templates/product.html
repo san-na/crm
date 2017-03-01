@@ -1,0 +1,57 @@
+{% extends "layout.html" %} {% block content %}
+<h3>产品管理</h3>
+<div>
+  <ul class="breadcrumb">
+    <li>
+      <a href="{{url_for('Common.index')}}">Home</a> <span class="divider">/</span>
+    </li>
+    <li>
+      <a href="#">产品管理</a>
+    </li>
+  </ul>
+</div>
+<a href="{{url_for('Common.product', action='add')}}"><button class="btn btn-large btn-round btn-success"><i class="icon-plus icon-white"></i> 添加产品</button></a>
+
+
+<div class="box">
+  <div class="box-header well" data-original-title="">
+    <h2>产品列表</h2>
+    {{action}}
+    <div class="box-icon">
+      <a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
+      <a href="#" class="btn btn-close btn-round"><i class="icon-remove"></i></a>
+    </div>
+  </div>
+  <div class="box-content">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>名称</th>
+          <th>描述</th>
+          <th>创建者</th>
+          <th>创建日期</th>
+          <th>修改日期</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td>{{ product.name }}</td>
+          <td class="center">{{ product.description }}</td>
+          <td class="center">{{ owner_dict[product.owner] }}</td>
+          <td class="center">{{ product.created }}</td>
+          <td class="center">{{ product.updated }}</td>
+          <td class="center">
+            <a class="btn btn-danger" href="{{url_for('Common.product', action='delete', uid=product.id)}}">
+              <i class="icon-trash icon-white"></i>
+              删除
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
