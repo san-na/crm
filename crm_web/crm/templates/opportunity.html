@@ -27,9 +27,8 @@
       <thead>
         <tr>
           <th>编号</th>
-          <th>源</th>
+          <th>来源</th>
           <th>名称</th>
-          <th>状态</th>
           <th>下次联络人</th>
           <th>下次联络日期</th>
           <th>创建日期</th>
@@ -40,16 +39,15 @@
       <tbody>
         {% for i in result %}
         <tr>
-          <td>{{ i.id }}</td>
-          <td class="center">{{ i.source }}</td>
+          <td><span class="label label-inverse">{{ i.id }}</span></td>
+          <td class="center">{{ source_dict[i.source] }}</td>
           <td class="center">{{ i.name }}</td>
-          <td class="center">{{ i.status }}</td>
-          <td class="center">{{ i.next_contacts }}</td>
+          <td class="center">{{ owner_dict[i.next_contacts] }}</td>
           <td class="center">{{ i.next_date }}</td>
           <td class="center">{{ i.created }}</td>
           <td class="center">{{ i.updated }}</td>
           <td class="center">
-            <a class="btn btn-danger" href="{{url_for('Common.product', action='delete', uid=i.id)}}">
+            <a class="btn btn-danger" href="{{url_for('Common.opportunity', action='delete', opportunity_id=i.id)}}">
               <i class="icon-trash icon-white"></i>
               删除
             </a>

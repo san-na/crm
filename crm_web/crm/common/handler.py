@@ -375,11 +375,11 @@ class OpportunityCtl(object):
         return opportunity
 
     @staticmethod
-    def delete(group_id):
+    def delete(opportunity_id):
         """删除销售机会
         """
-        opportunity = Opportunity.query.filter(Opportunity.id == group_id).first()
-        if opportunity:
-            opportunity.delete()
+        result = Opportunity.query.filter(Opportunity.id == opportunity_id).first()
+        if result:
+            result.delete()
             return True
         return False

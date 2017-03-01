@@ -215,46 +215,37 @@ def opportunity(action):
                 flash(u'操作成功', 'success')
             else:
                 flash(u'操作失败', 'error')
-
+            return redirect(url_for('Common.opportunity', action='list'))
         kwargs = {
             'form': form,
             'sources': settings.OPPORTUNITY_SOURCE_DICT,
             'owner_dict': AdminCtl.get_all()
         }
         return render_template('opportunity_add.html', **kwargs)
-    if action == 'edit':
-        group_id = request.args.get('group_id', '')
-        group = GroupCtl.get(group_id)
-        form = GroupEditForm()
-        if group:
-            form.group_id.data = group.id
-            form.name.data = group.name
-            form.description.data = group.description
-        kwargs = {
-            'form': form
-        }
-        return render_template('customer_group_add.html', **kwargs)
+
     if action == 'delete':
-        group_id = request.args.get('group_id', '')
-        group = GroupCtl.delete(group_id)
-        if group:
+        opportunity_id = request.args.get('opportunity_id', '')
+        result = OpportunityCtl.delete(opportunity_id)
+        if result:
             flash(u'操作成功', 'success')
         else:
             flash(u'操作失败', 'error')
-        return redirect(url_for('Common.group', action='list'))
+        return redirect(url_for('Common.opportunity', action='list'))
     if action == 'list':
         result = OpportunityCtl.get_all()
         owner_dict = {}
         for i in result:
             try:
-                owner_dict[i.owner] = AdminCtl.get(i.owner).name
+                owner_dict[i.next_contacts] = AdminCtl.get(i.next_contacts).name
             except:
                 # 如果用户被删除，则AdminCtl.get可能引发异常
                 pass
         kwargs = {
             'result': result,
-            'owner_dict': owner_dict
+            'owner_dict': owner_dict,
+            'source_dict': settings.OPPORTUNITY_SOURCE_DICT
         }
+
 
         return render_template('opportunity.html', **kwargs)
     return render_template("404.html")

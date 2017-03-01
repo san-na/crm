@@ -2,6 +2,7 @@
 
 from crm import db
 from datetime import datetime
+from datetime import timedelta
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import UserMixin
 from werkzeug.security import generate_password_hash, \
@@ -192,6 +193,7 @@ class Opportunity(db.Model):
         self.name = name
         self.source = source
         self.next_contacts = next_contacts
+        self.next_date = datetime.now() + timedelta(days=3)
         self.created = datetime.now()
         self.updated = datetime.now()
 
