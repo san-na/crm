@@ -484,6 +484,7 @@ def product(action):
                 flash(u'操作成功', 'success')
             else:
                 flash(u'操作失败', 'error')
+            return redirect(url_for('Common.product', action='list'))
         kwargs = {
             'form': form
         }
