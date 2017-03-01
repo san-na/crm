@@ -150,44 +150,6 @@ def user_setting():
     return render_template('user_settings.html', **kwargs)
 
 
-@Common.route('/product/<action>', methods=['GET', 'POST'])
-@login_required
-def product(action):
-    """product
-    """
-    if action =='add':
-        form = ProductAddForm()
-        if form.validate_on_submit():
-            name = form.data['name']
-            description = form.data['description']
-            if ProductCtl.add(current_user.id, name, description):
-                flash(u'操作成功', 'success')
-            else:
-                flash(u'操作失败', 'error')
-        kwargs = {
-            'form': form
-        }
-        return render_template('product_add.html', **kwargs)
-    if action == 'list':
-
-        products = ProductCtl.get_all()
-
-        owner_dict = {}
-        for i in products:
-            try:
-                owner_dict[i.owner] = AdminCtl.get(i.owner).name
-            except:
-                # 如果用户被删除，则AdminCtl.get可能引发异常
-                pass
-        kwargs = {
-            'products': products,
-            'owner_dict': owner_dict
-        }
-
-        return render_template('product.html', **kwargs)
-    return render_template("404.html")
-
-
 @Common.route('/order_management', methods=['GET', 'POST'])
 @login_required
 def order_management():
@@ -271,48 +233,6 @@ def customer_delete():
     else:
         flash(u'客户不存在', 'error')
     return redirect(url_for('Common.customer', action='list'))
-
-
-@Common.route('/usrs/import', methods=['GET', 'POST'])
-@login_required
-def user_import():
-    """导入用户
-    """
-    form = UserImportForm()
-
-    if form.validate_on_submit():
-        f = request.files['csv_file']
-
-        if f and f.filename == '':
-            flash('没有选择文件!', 'error')
-            return redirect(request.url)
-        if f.content_type not in settings.IMPORT_USER_FILE_TYPE_LIST:
-            flash(u'文件格式不合法', 'error')
-            return redirect(request.url)
-
-        result = utils.csv2list(f.read())
-        for i in result:
-            username = i[0]
-            email = i[1]
-            phone = i[2]
-            platform = i[3]
-
-            user = CustomerCtl.add(username, current_user.id)
-            user.email = email
-            user.phone = phone
-            user.platform = platform
-            user.update()
-
-        flash(u'success!', 'success')
-
-
-    for _, errors in form.errors.items():
-        for error in errors:
-            flash(error, 'error')
-
-        return redirect(url_for('Common.user_import'))
-
-    return render_template('user/import_user.html', form=form)
 
 
 @Common.route('/admins/profile', methods=['GET', 'POST'])
@@ -548,75 +468,49 @@ def customer(action):
     return render_template("404.html")
 
 
-#
-# @Common.route('/send_mail', methods=['GET', 'POST'])
-# def send_mail():
-#     email = request.args.get('email', '')
-#     token = utils.encode_jwt_token(email)
-#     url = settings.HTTP_URL.format('reset_password', token)
-#
-#     msg_content = render_template('email.html', email=email, test_url=url)
-#     phone_email = utils.phoneSendEmail(u'找回密码')
-#     phone_email.send(msg_content, email)
-#     result = {}
-#     result['email'] = email
-#     result['msg'] = msg_content
-#
-#     return jsonify(data=result)
-#
-#
-# @Common.route('/send_email2reguser', methods=['GET', 'POST'])
-# @login_required
-# def send_email2reguser():
-#     """发送用户激活邮件
-#         再次通过name和current_user.id查询数据库获取用户,
-#         避免发送email给不是自己该管理员下的用户
-#     """
-#
-#     username = request.args.get('username', '')
-#     user = CustomerCtl.get_by_name(username, current_user.id)
-#     if not user:
-#         flash(u'找不到该用户', 'error')
-#         return redirect(request.url)
-#     if not user.email:
-#         flash(u'该用户没添加Email', 'error')
-#         return redirect(request.url)
-#
-#     token = utils.encode_reg_user_token(user.id, user.email)
-#     url = settings.HTTP_URL.format('add_device', token)
-#
-#     msg_content = render_template('email2reguser.html', test_url=url)
-#     phone_email = utils.phoneSendEmail(u'账号激活')
-#     phone_email.send(msg_content, user.email)
-#     result = {}
-#     result['email'] = user.email
-#     result['msg'] = msg_content
-#
-#     return jsonify(data=result)
-#
-#
-# @Common.route('/reset_password', methods=['GET', 'POST'])
-# def reset_password():
-#     """重置密码
-#     """
-#
-#     form = ResetPasswordForm()
-#     token = request.args.get('token', '')
-#     if request.method == 'POST':
-#         token = form.data['token']
-#         password = form.data['password']
-#         reg_confirm = form.data['reg_confirm']
-#
-#         item = utils.decode_jwt_token(token)
-#         email = item['email']
-#         timestamp = item['timestamp']
-#
-#         if time() - timestamp > settings.PASSWORD_TIME_OUT:
-#             flash(u'连接已超时，请重新获取获取', 'warning')
-#
-#         else:
-#             user = AdminCtl.reset_password(email, password)
-#             if user:
-#                 flash(u'密码重置成功！', 'success')
-#     form.token.data = token
-#     return render_template('reset_password.html', form=form)
+
+
+@Common.route('/product/<action>', methods=['GET', 'POST'])
+@login_required
+def product(action):
+    """product
+    """
+    if action =='add':
+        form = ProductAddForm()
+        if form.validate_on_submit():
+            name = form.data['name']
+            description = form.data['description']
+            if ProductCtl.add(current_user.id, name, description):
+                flash(u'操作成功', 'success')
+            else:
+                flash(u'操作失败', 'error')
+        kwargs = {
+            'form': form
+        }
+        return render_template('product_add.html', **kwargs)
+    if action == 'delete':
+        pid = request.args.get('pid', '')
+        if ProductCtl.delete(pid):
+            flash(u'操作成功', 'success')
+        else:
+            flash(u'操作失败', 'error')
+        return redirect(url_for('Common.product', action='list'))
+
+    if action == 'list':
+
+        products = ProductCtl.get_all()
+
+        owner_dict = {}
+        for i in products:
+            try:
+                owner_dict[i.owner] = AdminCtl.get(i.owner).name
+            except:
+                # 如果用户被删除，则AdminCtl.get可能引发异常
+                pass
+        kwargs = {
+            'products': products,
+            'owner_dict': owner_dict
+        }
+
+        return render_template('product.html', **kwargs)
+    return render_template("404.html")

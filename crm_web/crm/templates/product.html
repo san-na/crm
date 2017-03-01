@@ -43,7 +43,7 @@
           <td class="center">{{ product.created }}</td>
           <td class="center">{{ product.updated }}</td>
           <td class="center">
-            <a class="btn btn-danger" href="{{url_for('Common.product', action='delete', uid=product.id)}}">
+            <a class="btn btn-danger" href="{{url_for('Common.product', action='delete', pid=product.id)}}">
               <i class="icon-trash icon-white"></i>
               删除
             </a>
