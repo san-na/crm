@@ -108,7 +108,7 @@ class Customer(db.Model):
 
 
 class Group(db.Model):
-    '''存放用户组相关信息
+    '''存放客户组相关信息
     '''
     __tablename__ = 'customer_group'
 
